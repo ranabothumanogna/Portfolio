@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ramayampeta Laxmi — Portfolio</title>
+
+  <!-- Inline CSS: single-file responsive portfolio -->
+  <style>
+    /* --- Reset & base --- */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      color: #0f1724;
+      background: #f8fafc;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.45;
+    }
+    a { color: inherit; }
+
+    /* --- Container --- */
+    .container { width: min(1100px, 94%); margin: 0 auto; padding: 1.25rem 0; }
+
+    /* --- Header / Nav --- */
+    header.site-header {
+      background: #fff;
+      border-bottom: 1px solid #e6eef5;
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      backdrop-filter: blur(4px);
+    }
+    .header-inner { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding: .5rem 0; }
+    .brand { display:flex; gap:.75rem; align-items:center; text-decoration:none; color:inherit; }
+    .brand-img { width:48px; height:48px; border-radius:10px; object-fit:cover; border:1px solid #eef2f7; }
+    .brand-name { font-weight:700; font-size:1rem; }
+
+    /* desktop nav */
+    nav.site-nav ul { display:flex; gap:1.1rem; list-style:none; margin:0; padding:0; align-items:center; }
+    nav.site-nav a { display:inline-block; padding:.45rem .6rem; border-radius:8px; font-weight:600; text-decoration:none; color:#0f1724;}
+    nav.site-nav a:hover { background:#f1f7ff; }
+
+    /* hamburger checkbox (hidden) */
+    .nav-toggle { display:none; }
+
+    /* hamburger button */
+    .nav-toggle-btn { display:none; width:40px; height:40px; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; }
+    .nav-toggle-btn .bar { width:22px; height:2.5px; background:#0f1724; display:block; border-radius:2px; transition:transform .18s ease, opacity .18s ease; margin:4px 0; }
+
+    /* --- Hero --- */
+    .hero { padding:3.25rem 0; background: linear-gradient(180deg,#fff 0%, #fbfdff 100%); }
+    .hero-grid { display:grid; grid-template-columns: 1fr 360px; gap:2rem; align-items:center; }
+    .hero h1 { margin:0 0 .5rem; font-size:2.1rem; line-height:1.02; }
+    .lead { margin: .5rem 0 1rem; color:#334155; max-width:56ch; }
+    .accent { color:#0966ff; }
+
+    .hero-card { background:#fff; border:1px solid #e6eef7; border-radius:12px; padding:1rem; box-shadow:0 8px 24px rgba(15,23,36,0.04); text-align:center; }
+    .hero-img { width:100%; height:220px; object-fit:cover; border-radius:8px; display:block; }
+
+    .cta { display:inline-flex; gap:.5rem; align-items:center; margin-top:.6rem; }
+    .btn { padding:.6rem 1rem; border-radius:10px; text-decoration:none; font-weight:700; cursor:pointer; border:none; }
+    .btn-primary { background:#0966ff; color:#fff; }
+    .btn-ghost { background:transparent; color:#0966ff; border:1px solid #e6eef7; }
+
+    /* --- Sections --- */
+    section { padding:1.5rem 0; }
+    h2 { margin:0 0 .6rem; font-size:1.25rem; }
+
+    /* --- Skills grid --- */
+    .skills-grid { display:grid; grid-template-columns: repeat(4,1fr); gap:1rem; margin-top:1rem; }
+    .skill { background:#fff; border:1px solid #eef4fb; padding:.9rem; border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:600; min-height:56px; }
+
+    /* --- Projects (example cards) --- */
+    .projects-grid { display:grid; grid-template-columns: repeat(3,1fr); gap:1rem; margin-top:1rem; }
+    .card { background:#fff; border:1px solid #eef4fb; padding:1rem; border-radius:12px; display:flex; flex-direction:column; gap:.6rem; }
+    .card img { width:100%; height:140px; object-fit:cover; border-radius:8px; }
+
+    /* --- Contact --- */
+    .contact-grid { display:grid; grid-template-columns: 1fr 320px; gap:1.5rem; margin-top:1rem; align-items:start; }
+    .contact-form input, .contact-form textarea { width:100%; padding:.7rem; border-radius:8px; border:1px solid #ddeaf2; margin-top:.5rem; font-size:.95rem; }
+    .contact-info { background:#fff; border:1px solid #eef4fb; padding:1rem; border-radius:10px; }
+
+    /* --- Footer --- */
+    footer.site-footer { background:#fff; border-top:1px solid #e6eef5; padding:1rem 0; margin-top:2rem; }
+    .footer-inner { display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+
+    /* --- Utility --- */
+    .muted { color:#60728a; }
+    .visually-hidden { position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap; }
+
+    /* --- Responsive breakpoints --- */
+    @media (max-width:1023px) {
+      .hero-grid { grid-template-columns: 1fr 300px; }
+      .skills-grid { grid-template-columns: repeat(2,1fr); }
+      .projects-grid { grid-template-columns: repeat(2,1fr); }
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width:767px) {
+      .brand-name { display:none; }                /* compact header */
+      .nav-toggle-btn { display:flex; }           /* show hamburger */
+      nav.site-nav { position: absolute; right:1rem; top:64px; width:92%; max-width:340px; transform-origin: top right; transform: scaleY(0); transition: transform .18s ease; background:#fff; border:1px solid #e6eef5; border-radius:10px; padding:1rem; box-shadow:0 12px 30px rgba(2,6,23,0.06); }
+      nav.site-nav ul { flex-direction:column; gap:.6rem; }
+      nav.site-nav a { display:block; }
+
+      /* when checkbox is checked, show nav */
+      .nav-toggle:checked + label + nav.site-nav { transform: scaleY(1); }
+
+      .header-inner { padding:.4rem 0; }
+      .hero-grid { grid-template-columns: 1fr; gap:1rem; }
+      .hero-card { order:-1; } /* put image above text */
+      .skills-grid { grid-template-columns: 1fr; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .container { padding-left:1rem; padding-right:1rem; }
+      .footer-inner { flex-direction:column; align-items:flex-start; gap:.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <a class="brand" href="#home" aria-label="Home - Ramayampeta Laxmi">
+        <!-- local image path (uploaded file) -->
+        <img class="brand-img" src="/mnt/data/f951bd25-087e-4c41-b002-12601c05f47c.png" alt="Laxmi profile" />
+        <span class="brand-name">Ramayampeta Laxmi</span>
+      </a>
+
+      <!-- mobile nav toggle (checkbox hack) -->
+      <input id="nav-toggle" class="nav-toggle" type="checkbox" aria-hidden="true" />
+      <label for="nav-toggle" class="nav-toggle-btn" aria-hidden="true" title="Toggle menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </label>
+
+      <nav class="site-nav" role="navigation" aria-label="Main navigation">
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main>
+    <!-- Hero -->
+    <section id="home" class="hero" aria-label="Hero section">
+      <div class="container hero-grid">
+        <div>
+          <h1>Hi — I'm <span class="accent">Manogna</span></h1>
+          <p class="lead">I build responsive websites and visualizations. I focus on clean markup, accessible interfaces, and simple, maintainable CSS. Available for internships and freelance projects.</p>
+          <div class="cta">
+            <a class="btn btn-primary" href="#contact">Contact Me</a>
+            <a class="btn btn-ghost" href="#projects">See Projects</a>
+          </div>
+        </div>
+
+        <aside class="hero-card" aria-label="Profile and availability">
+          <!-- second uploaded image -->
+          <img class="hero-img" src="/mnt/data/455b5952-e42a-4dad-b543-fd3edd01babd.png" alt="Project / Illustration" />
+          <div style="margin-top:.6rem; color:#334155;">
+            <strong>Open to work</strong>
+            <div class="muted" style="font-size:. ninerem;">Remote / On-site • Internships • Freelance</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" aria-label="About me">
+      <div class="container">
+        <h2>About</h2>
+        <p class="muted">I am a web developer and data enthusiast with experience in building responsive, user-friendly websites using semantic HTML and modern CSS. I enjoy turning ideas into functional interfaces and exploring data through visualizations.</p>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills" aria-label="Skills">
+      <div class="container">
+        <h2>Skills</h2>
+        <div class="skills-grid" role="list">
+          <div class="skill" role="listitem">HTML5</div>
+          <div class="skill" role="listitem">CSS3 • Flexbox • Grid</div>
+          <div class="skill" role="listitem">JavaScript (ES6+)</div>
+          <div class="skill" role="listitem">Responsive Design</div>
+          <div class="skill" role="listitem">Git & GitHub</div>
+          <div class="skill" role="listitem">Python (pandas)</div>
+          <div class="skill" role="listitem">Data Viz (D3 / charts)</div>
+          <div class="skill" role="listitem">Accessibility</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" aria-label="Selected projects">
+      <div class="container">
+        <h2>Projects</h2>
+        <p class="muted">A few highlights (replace these with your own projects/screenshots):</p>
+
+        <div class="projects-grid" role="list">
+          <article class="card" role="listitem">
+            <img src="/mnt/data/455b5952-e42a-4dad-b543-fd3edd01babd.png" alt="Project screenshot" />
+            <strong>Responsive Portfolio</strong>
+            <p class="muted" style="margin:0.25rem 0 0;">A clean single-file responsive portfolio built with HTML and CSS.</p>
+            <a href="#contact" style="margin-top:auto; display:inline-block; font-weight:700; text-decoration:none; color:#0966ff;">View details →</a>
+          </article>
+
+          <article class="card" role="listitem">
+            <img src="/mnt/data/455b5952-e42a-4dad-b543-fd3edd01babd.png" alt="Project screenshot" />
+            <strong>Data Viz Demo</strong>
+            <p class="muted" style="margin:0.25rem 0 0;">Interactive charts and visualizations using D3 / chart libraries.</p>
+            <a href="#contact" style="margin-top:auto; display:inline-block; font-weight:700; text-decoration:none; color:#0966ff;">View details →</a>
+          </article>
+
+          <article class="card" role="listitem">
+            <img src="/mnt/data/455b5952-e42a-4dad-b543-fd3edd01babd.png" alt="Project screenshot" />
+            <strong>Web App UI</strong>
+            <p class="muted" style="margin:0.25rem 0 0;">UI-focused project with accessible components and responsive layout.</p>
+            <a href="#contact" style="margin-top:auto; display:inline-block; font-weight:700; text-decoration:none; color:#0966ff;">View details →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" aria-label="Contact">
+      <div class="container contact-grid">
+        <div>
+          <h2>Contact</h2>
+          <p class="muted">Interested in working together? Send a quick message — I usually reply within a few days.</p>
+
+          <form class="contact-form" action="#" method="post" onsubmit="return false;">
+            <label class="visually-hidden" for="name">Name</label>
+            <input id="name" type="text" name="name" placeholder="Your name" required />
+
+            <label class="visually-hidden" for="email">Email</label>
+            <input id="email" type="email" name="email" placeholder="you@example.com" required />
+
+            <label class="visually-hidden" for="message">Message</label>
+            <textarea id="message" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
+
+            <div style="margin-top:.5rem;">
+              <button type="submit" class="btn btn-primary">Send message</button>
+            </div>
+          </form>
+        </div>
+
+        <aside class="contact-info" aria-label="Contact information">
+          <h3>Get in touch</h3>
+          <p>Email: <a href="mailto:youremail@example.com">youremail@example.com</a></p>
+          <p>Location: India</p>
+          <div style="margin-top:.6rem;">
+            <a href="#" style="display:inline-block;margin-right:.5rem;text-decoration:none;">GitHub</a>
+            <a href="#" style="display:inline-block;margin-right:.5rem;text-decoration:none;">LinkedIn</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div>&copy; <span id="year"></span> Ramayampeta Laxmi</div>
+      <nav aria-label="Footer nav">
+        <a href="#home" style="margin-right:.6rem; text-decoration:none;">Home</a>
+        <a href="#projects" style="margin-right:.6rem; text-decoration:none;">Projects</a>
+        <a href="#contact" style="text-decoration:none;">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Small script: current year -->
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
